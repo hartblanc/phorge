@@ -161,6 +161,8 @@ final class DifferentialChangesetParser extends Phobject {
 
       if ($is_unified) {
         $renderer_key = '1up';
+      } else if ($this->shouldRenderOneSidedAsUnified()) {
+        $renderer_key = '1up';
       } else {
         $renderer_key = $viewstate->getDefaultDeviceRendererKey();
       }
@@ -176,6 +178,49 @@ final class DifferentialChangesetParser extends Phobject {
     }
 
     return $renderer;
+  }
+
+  private function shouldRenderOneSidedAsUnified() {
+    $viewer = $this->getViewer();
+
+    $is_enabled = $viewer->compareUserSetting(
+      PhabricatorOneSidedUnifiedDiffsSetting::SETTINGKEY,
+      PhabricatorOneSidedUnifiedDiffsSetting::VALUE_ENABLED);
+    if (!$is_enabled) {
+      return false;
+    }
+
+    return self::isOneSidedChangeset($this->changeset);
+  }
+
+  public static function isOneSidedChangeset(DifferentialChangeset $changeset) {
+    // Added and deleted files are one-sided even if they have no hunks, like
+    // images and other binary files.
+    switch ($changeset->getChangeType()) {
+      case DifferentialChangeType::TYPE_ADD:
+      case DifferentialChangeType::TYPE_DELETE:
+        return true;
+    }
+
+    // Use the hunks rather than the changeset line counts, because synthetic
+    // changesets built for interdiffs do not set those counts.
+    $has_add = false;
+    $has_del = false;
+    foreach ($changeset->getHunks() as $hunk) {
+      if ($hunk->getAddedLines()) {
+        $has_add = true;
+      }
+
+      if ($hunk->getRemovedLines()) {
+        $has_del = true;
+      }
+
+      if ($has_add && $has_del) {
+        break;
+      }
+    }
+
+    return ($has_add xor $has_del);
   }
 
   const CACHE_VERSION = 14;
