@@ -185,7 +185,7 @@ final class DifferentialChangesetParser extends Phobject {
 
     $is_enabled = $viewer->compareUserSetting(
       PhabricatorOneSidedUnifiedDiffsSetting::SETTINGKEY,
-      PhabricatorOneSidedUnifiedDiffsSetting::VALUE_ENABLED);
+      PhabricatorOneSidedUnifiedDiffsSetting::VALUE_ONE_SIDED_UNIFIED_ENABLED);
     if (!$is_enabled) {
       return false;
     }

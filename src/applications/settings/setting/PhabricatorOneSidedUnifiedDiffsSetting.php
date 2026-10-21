@@ -5,8 +5,8 @@ final class PhabricatorOneSidedUnifiedDiffsSetting
 
   const SETTINGKEY = 'diff-unified-one-sided';
 
-  const VALUE_DISABLED = 'default';
-  const VALUE_ENABLED = 'enabled';
+  const VALUE_ONE_SIDED_UNIFIED_DISABLED = 'default';
+  const VALUE_ONE_SIDED_UNIFIED_ENABLED = 'enabled';
 
   public function getSettingName() {
     return pht('Unified Diffs for One-Sided Changes');
@@ -29,13 +29,13 @@ final class PhabricatorOneSidedUnifiedDiffsSetting
   }
 
   public function getSettingDefaultValue() {
-    return self::VALUE_DISABLED;
+    return self::VALUE_ONE_SIDED_UNIFIED_DISABLED;
   }
 
   protected function getSelectOptions() {
     return array(
-      self::VALUE_DISABLED => pht('Disabled'),
-      self::VALUE_ENABLED => pht('Enabled'),
+      self::VALUE_ONE_SIDED_UNIFIED_DISABLED => pht('Disabled'),
+      self::VALUE_ONE_SIDED_UNIFIED_ENABLED => pht('Enabled'),
     );
   }
 
