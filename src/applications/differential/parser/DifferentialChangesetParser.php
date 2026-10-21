@@ -149,6 +149,19 @@ final class DifferentialChangesetParser extends Phobject {
   }
 
   private function newRenderer() {
+    switch ($this->newRendererKey()) {
+      case '1up':
+        $renderer = new DifferentialChangesetOneUpRenderer();
+        break;
+      default:
+        $renderer = new DifferentialChangesetTwoUpRenderer();
+        break;
+    }
+
+    return $renderer;
+  }
+
+  public function newRendererKey() {
     $viewer = $this->getViewer();
     $viewstate = $this->getViewstate();
 
@@ -168,16 +181,7 @@ final class DifferentialChangesetParser extends Phobject {
       }
     }
 
-    switch ($renderer_key) {
-      case '1up':
-        $renderer = new DifferentialChangesetOneUpRenderer();
-        break;
-      default:
-        $renderer = new DifferentialChangesetTwoUpRenderer();
-        break;
-    }
-
-    return $renderer;
+    return $renderer_key;
   }
 
   private function shouldRenderOneSidedAsUnified() {
